@@ -1,15 +1,11 @@
 var http = require('http');
+var url = require('url');
 var PORT = 3724;
 var Main = require('./main.js').Main;
 var server = http.createServer(function (req, res) {
-    const valor = (req.url.replace('?', '').replace('/', '').split('&'));
-    let parametros = {}
-    for (item in valor){
-        let chaveValor = valor[item].split('=');    
-        parametros[chaveValor[0]] = Number(chaveValor[1])
-    }
-    let resultado = 0
-    resultado = Main.soma(parametros.a, parametros.b);
+    const urlCapturada = url.parse(req.url, true);
+    const {query} = urlCapturada;
+    let resultado = Main.soma(Number(query.a), Number(query.b));
     res.end("Soma = " + resultado);
 });
 server.listen(PORT, function () {
