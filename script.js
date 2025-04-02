@@ -1,27 +1,28 @@
-var http = require('http');
-var url = require('url');
+const express = require('express')
 var PORT = 8000;
-var Main = require('./main.js').Main;
-var server = http.createServer(function (req, res) {
-    const urlCapturada = url.parse(req.url, true);
-    const {query, pathname} = urlCapturada;
-    if (pathname === '/soma') {
-        let resultado = Main.soma(Number(query.a), Number(query.b));
-        res.end("Soma = " + resultado);
-    }else if (pathname === '/subtracao') {
-        let resultado = Main.subtracao(Number(query.a), Number(query.b));
-        res.end("Subtração = " + resultado);
-    }else if (pathname === '/multi'){
-        let resultado = Main.multiplicacao(Number(query.a), Number(query.b));
-        res.end("Multiplicação = " + resultado);
-    }else if (pathname === '/divisao'){
-        let resultado = Main.divisao(Number(query.a), Number(query.b));
-        res.end("Divisão = " + resultado);
-    }else{
-        res.statusCode = 404;
-        res.end("Pagina não encontrada");
-    }
-});
+const Main = require('./main.js').Main;
+const server = express();
+
+server.get('/soma', (req, res) => {
+    let resultado = Main.soma(Number(req.query.a), Number(req.query.b));
+    res.send("Soma = " + resultado);
+})
+
+server.get(`/subtracao`, (req, res) => {
+    let resultado = Main.subtracao(Number(req.query.a), Number(req.query.b));
+    res.send("Subtração = " + resultado);
+})
+
+server.get(`/multi`, (req, res) => {
+    let resultado = Main.multiplicacao(Number(req.query.a), Number(req.query.b));
+    res.send("Multiplicação = " + resultado);
+})
+
+server.get(`/divisao`, (req, res) => {
+    let resultado = Main.divisao(Number(req.query.a), Number(req.query.b));
+    res.send("Divisão = " + resultado);
+})
+
 server.listen(PORT, function () {
     console.log("Server running at http://localhost:".concat(PORT, "/"));
 });
